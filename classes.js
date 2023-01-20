@@ -56,24 +56,24 @@ export class RoundTripUserFlightData extends OneWayUserFlightData {
     departureTime,
     arrivalTime,
     duration,
-    price,
-    url,
     trip2DepatureTime,
-    trip2ArrivalTime
+    trip2ArrivalTime,
+    trip2Duration
   ) {
-    super(airline, departureTime, arrivalTime, duration, price, url),
-      (this.trip2DepatureTime = trip2DepatureTime);
+    super(airline, departureTime, arrivalTime, duration);
+    this.trip2DepatureTime = trip2DepatureTime;
     this.trip2ArrivalTime = trip2ArrivalTime;
+    this.trip2Duration = trip2Duration;
   }
 
   set trip2DepatureTime(time) {
-    this._departureTime = time;
+    this._trip2DepatureTime = time;
   }
   set trip2ArrivalTime(time) {
-    this._arrivalTime = time;
+    this._trip2ArrivalTime = time;
   }
-  set duration(time) {
-    this._duration = time;
+  set _trip2Duration(time) {
+    this._trip2Duration = time;
   }
 }
 
