@@ -1,84 +1,79 @@
 import finalUserResult from "./userFlightResultSample.js";
 import { OneWayUserFlightData, RoundTripUserFlightData } from "./classes.js";
-import {
-  createElementAndAppend,
-  addDataToHtmlElement,
-} from "./addElementToDom.js";
 
 function setDateAndTime(date, time) {
   date = date.slice(0, date.indexOf("T"));
   return `${date} ${time}`;
 }
 
-// let UserFlightDeatails = finalUserResult;
-
-// const tripsArray = UserFlightDeatails.trips;
-// const legs = UserFlightDeatails.legs;
-// const fares = UserFlightDeatails.fares;
 console.log(finalUserResult);
-const { airlines, legs, trips, fares } = finalUserResult;
-let userResults = undefined;
-console.log(legs, "legs");
-console.log(trips, "TRIPS");
 
-for (let i = 0; i < trips.length; i++) {
-  const trip = trips[i];
-  const { code, id, legIds } = trip;
+/* getting the trip by starting for loop */
+export function getUserRoundtripDeatails() {
+  /* CHANGE IT TO THE PROMISE RESPOND!!! */
+  let userResults;
+  const { airlines, legs, trips, fares } = finalUserResult;
+  for (let i = 0; i < trips.length; i++) {
+    const trip = trips[i];
+    const { code, id, legIds } = trip;
 
-  legs.map((leg) => {
-    const {
-      id,
-      departureTime,
-      departureDateTime,
-      arrivalTime,
-      arrivalDateTime,
-      duration,
-    } = leg;
-
-    function findAirline() {
-      let results;
-      for (let i = 0; i < airlines.length; i++) {
-        leg.airlineCodes.find((airlineCode) => {
-          if (airlines[i].code == airlineCode) {
-            results = airlines[i].name;
-          }
-        });
-      }
-      return results;
-    }
-
-    if (legIds[0] == id) {
-      userResults = new RoundTripUserFlightData(
-        findAirline(),
-        setDateAndTime(departureDateTime, departureTime),
-        setDateAndTime(arrivalDateTime, arrivalTime),
-        duration
-      );
-    }
-    if (legIds[1] == id) {
-      (userResults.trip2DepatureTime = setDateAndTime(
+    legs.map((leg) => {
+      const {
+        id,
+        departureTime,
         departureDateTime,
-        departureTime
-      )),
-        (userResults.trip2ArrivalTime = setDateAndTime(
-          arrivalDateTime,
-          arrivalTime
-        )),
-        (userResults.trip2Duration = duration);
-    }
-  });
+        arrivalTime,
+        arrivalDateTime,
+        duration,
+      } = leg;
 
-  console.log(userResults);
+      function findAirline() {
+        let result;
+        for (let i = 0; i < airlines.length; i++) {
+          leg.airlineCodes.find((airlineCode) => {
+            if (airlines[i].code == airlineCode) {
+              result = airlines[i].name;
+            }
+          });
+        }
+        return result;
+      }
+      /* at the legsIds the first ID at the array is the first trip */
+      if (legIds[0] == id) {
+        userResults = new OneWayUserFlightData(
+          findAirline(),
+          setDateAndTime(departureDateTime, departureTime),
+          setDateAndTime(arrivalDateTime, arrivalTime),
+          duration
+        );
+      }
+      /* the second item at the array is the second trip */
+      if (legIds[1] == id) {
+        let roundTripUserResults = new RoundTripUserFlightData();
+        //moveing a key-value from one object to another
+        roundTripUserResults = { ...userResults };
+        userResults = roundTripUserResults;
+
+        (userResults.trip2DepatureTime = setDateAndTime(
+          departureDateTime,
+          departureTime
+        )),
+          (userResults.trip2ArrivalTime = setDateAndTime(
+            arrivalDateTime,
+            arrivalTime
+          )),
+          (userResults.trip2Duration = duration);
+      }
+    });
+    /* keeping with tripObj iteraion to get price and URL */
+
+    fares.map((fare) => {
+      if (fare.tripId == id) {
+        userResults.price = fare.price.totalAmountUsd;
+        userResults.url = fare.handoffUrl;
+      }
+    });
+  }
 }
 
-// console.log(userResults);
-// function findAirline(parmCode) {
-//   airlines.find((airline) => {
-//     legs.map((leg) => {
-//       if (airline.code == parmCode) {
-//         console.log(airline.name);
-//         return airline.name;
-//       }
-//     });
-//   });
-// }
+getUserRoundtripDeatails();
