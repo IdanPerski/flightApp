@@ -14,19 +14,11 @@ function getUserRoundtripDeatails() {
   let userResults;
   let userResultsArray = [];
   const { airlines, legs, trips, fares } = finalUserResult;
-  for (let i = 0; i < trips.length; i++) {
+  for (let i = 0; i < trips.length / 4; i++) {
     const trip = trips[i];
-    const { code, id, legIds } = trip;
-    legs.map((leg) => {
-      const {
-        id,
-        departureTime,
-        departureDateTime,
-        arrivalTime,
-        arrivalDateTime,
-        duration,
-      } = leg;
+    const { legIds } = trip;
 
+    legs.map((leg) => {
       function findAirline() {
         let result;
         for (let i = 0; i < airlines.length; i++) {
@@ -38,8 +30,16 @@ function getUserRoundtripDeatails() {
         }
         return result;
       }
+      const {
+        id,
+        departureTime,
+        departureDateTime,
+        arrivalTime,
+        arrivalDateTime,
+        duration,
+      } = leg;
       switch (legIds.length) {
-        case 1 /* at the legsIds the first ID at the array is the first trip */:
+        case 1:
           if (legIds[0] == id) {
             userResults = new OneWayUserFlightData(
               findAirline(),
@@ -49,39 +49,43 @@ function getUserRoundtripDeatails() {
             );
           }
           break;
-        case 2:
-          for (let i = 0; i < legs.length; i++) {
-            /* have to loop again because legs is the middle of his itreation */
 
-            if (legIds[1] == legs[i].id) {
-              userResults = new RoundTripUserFlightData(
-                findAirline(),
-                setDateAndTime(departureDateTime, departureTime),
-                setDateAndTime(arrivalDateTime, arrivalTime),
-                duration,
-                setDateAndTime(departureDateTime, departureTime),
-                setDateAndTime(arrivalDateTime, arrivalTime),
-                legs[i].duration
+        case 2:
+          if (legIds[1] == id) {
+            userResults = new RoundTripUserFlightData(
+              findAirline(),
+              setDateAndTime(departureDateTime, departureTime),
+              setDateAndTime(arrivalDateTime, arrivalTime),
+              duration
+            );
+
+            for (let i = 0; i < legs.length; i++) {
+              userResults.trip2DepatureTime = setDateAndTime(
+                legs[i].departureDateTime,
+                legs[i].departureTime
               );
+              userResults.trip2ArrivalTime = setDateAndTime(
+                legs[i].arrivalDateTime,
+                legs[i].arrivalTime
+              );
+              userResults.trip2Duration = legs[i].duration;
             }
           }
-          break;
-
-        default:
           break;
       }
     });
     /* keeping with trip iteraion to get price and URL */
 
     fares.map((fare) => {
-      if (fare.tripId == id) {
+      if (fare.tripId == trip.id) {
         userResults.price = fare.price.totalAmountUsd;
         userResults.url = fare.handoffUrl;
       }
     });
-
+    // console.log(userResults);
     userResultsArray.push(userResults);
   }
+
   console.log(userResultsArray);
   return userResultsArray;
 }
