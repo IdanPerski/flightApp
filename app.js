@@ -4,6 +4,8 @@ import {
   addDataToHtmlElement,
 } from "./addElementToDom.js";
 
+import { getUserRoundSearchDeatails } from "./myFunctions.js";
+
 const apiKey = "63c597d33533e412b5b2e407";
 
 /* buttons */
@@ -96,116 +98,7 @@ findBtn.addEventListener("click", () => {
   userFlights
     .then((respond) => {
       const UserFlightDeatails = JSON.parse(respond);
-      console.log(UserFlightDeatails);
-      let userResultsArray = [];
-      let userResults = undefined;
-      const tripsArray = UserFlightDeatails.trips;
-      const legs = UserFlightDeatails.legs;
-      const fares = UserFlightDeatails.fares;
-
-      switch (UserFlightDeatails.search.legs.length) {
-        case 1:
-          tripsArray.map((tripObj) => {
-            legs.map((legsObj) => {
-              /* find airline name */
-              function findAirline() {
-                const airlines = UserFlightDeatails.airlines;
-                for (let i = 0; i < airlines.length; i++) {
-                  if (airlines[i].code == legsObj.airlineCodes[0]) {
-                    return airlines[i].name;
-                  }
-                }
-              }
-
-              /*  creating object with all the data that "collected at this iteration"  */
-              tripObj.legIds.map((idTrip) => {
-                if (legsObj.id == idTrip) {
-                  const duration = legsObj.duration;
-                  userResults = new OneWayUserFlightData(
-                    findAirline(),
-                    setDateAndTime(
-                      legsObj.departureDateTime,
-                      legsObj.departureTime
-                    ),
-                    setDateAndTime(
-                      legsObj.arrivalDateTime,
-                      legsObj.arrivalTime
-                    ),
-                    duration
-                  );
-                }
-              });
-            });
-            /* keeping with tripObj iteraion to get price and URL */
-
-            fares.map((fare) => {
-              if (fare.tripId == tripObj.id) {
-                userResults.price = fare.price.totalAmountUsd;
-                userResults.url = fare.handoffUrl;
-              }
-            });
-            userResultsArray.push(userResults);
-          });
-
-          break;
-
-        case 2:
-          let userResults = new RoundTripUserFlightData();
-          console.log(userResults);
-          /* didn't finish this case, have to get new API key */
-          const idsArray = tripsArray.map((object) => object.legIds);
-          console.log(idsArray);
-          const trip1Id = idsArray.map((subArray) => subArray[0]);
-          const trip2Id = idsArray.map((subArray) => subArray[1]);
-          console.log(trip1Id, "trip1");
-          trip1Id.map((trip) => {
-            console.log(trip);
-            console.log(legs);
-            legs.map((obj) => {
-              if (obj.id == trip) {
-                console.log(obj.departureDateTime);
-                console.log(obj.departureTime);
-
-                userResults._departureTime = setDateAndTime(
-                  obj.departureDateTime,
-                  obj.departureTime
-                );
-
-                userResults._arrivalTime = setDateAndTime(
-                  obj.arrivalDateTime,
-                  obj.arrivalTime
-                );
-
-                userResults.duration = obj.duration;
-              }
-            });
-          });
-          console.log(userResults);
-
-          console.log(trip2Id, "trip2");
-          // const roundTripId = tripsArray.map((fullId) => fullId.id);
-          // console.log(roundTripId);
-          // let userResults = new RoundTripUserFlightData();
-          // legs.map((obj) => {
-          //   trip1Id.map((id) => {
-          //     if (obj.id === id) {
-          //       userResults._departureTime = obj.departureTime;
-          //     }
-          //   });
-          // });
-          // console.log(userResults);
-
-          // 'with roundTripId  you can get the fares'
-
-          // const faresIdTrips = fares.map((fare) => fare.id);
-          // console.log(faresIdTrips);
-
-          break;
-
-        default:
-          break;
-      }
-
+      getUserRoundSearchDeatails(UserFlightDeatails);
       /* ________displaying results_________ */
       const displayResults = document.querySelector("#user-result-display");
       userResultsArray.map((obj) => {

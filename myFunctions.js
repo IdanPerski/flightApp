@@ -6,15 +6,15 @@ function setDateAndTime(date, time) {
   return `${date} ${time}`;
 }
 
-console.log(finalUserResult);
+// console.log(finalUserResult);
 
 /* getting the trip by starting for loop */
-function getUserRoundtripDeatails() {
+export function getUserRoundSearchDeatails(apiObjectDestruction) {
   /* CHANGE IT TO THE PROMISE RESPOND!!! */
   let userResults;
   let userResultsArray = [];
-  const { airlines, legs, trips, fares } = finalUserResult;
-  for (let i = 0; i < trips.length / 4; i++) {
+  const { airlines, legs, trips, fares } = apiObjectDestruction;
+  for (let i = 0; i < trips.length; i++) {
     const trip = trips[i];
     const { legIds } = trip;
 
@@ -75,7 +75,6 @@ function getUserRoundtripDeatails() {
       }
     });
     /* keeping with trip iteraion to get price and URL */
-
     fares.map((fare) => {
       if (fare.tripId == trip.id) {
         userResults.price = fare.price.totalAmountUsd;
@@ -86,8 +85,8 @@ function getUserRoundtripDeatails() {
     userResultsArray.push(userResults);
   }
 
-  console.log(userResultsArray);
+  //   console.log(userResultsArray);
   return userResultsArray;
 }
 
-getUserRoundtripDeatails();
+// getUserRoundSearchDeatails(finalUserResult);
