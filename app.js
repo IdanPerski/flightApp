@@ -98,10 +98,9 @@ findBtn.addEventListener("click", () => {
   userFlights
     .then((respond) => {
       const UserFlightDeatails = JSON.parse(respond);
-      getUserRoundSearchDeatails(UserFlightDeatails);
       /* ________displaying results_________ */
       const displayResults = document.querySelector("#user-result-display");
-      userResultsArray.map((obj) => {
+      getUserRoundSearchDeatails(UserFlightDeatails).map((obj) => {
         obj.addToDom(displayResults);
       });
     })

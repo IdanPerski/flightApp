@@ -6,7 +6,7 @@ function setDateAndTime(date, time) {
   return `${date} ${time}`;
 }
 
-// console.log(finalUserResult);
+console.log(finalUserResult);
 
 /* getting the trip by starting for loop */
 export function getUserRoundSearchDeatails(apiObjectDestruction) {
@@ -14,15 +14,31 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
   let userResults;
   let userResultsArray = [];
   const { airlines, legs, trips, fares } = apiObjectDestruction;
+
+  // function findAirline2(){
+  //   let result
+  //  for (let i = 0; i < legs.length; i++) {
+    
+  //   const airlineCodes = legs[i].airlineCodes;
+  //   airlines.find((airline)=>{
+  //     if (airlineCodes==airline.code) {
+  //       result =airline.name
+  //     }
+  //   })
+  //  }
+  //  return result
+  // }
+
+
   for (let i = 0; i < trips.length; i++) {
     const trip = trips[i];
     const { legIds } = trip;
 
     legs.map((leg) => {
-      function findAirline() {
+      function findAirline(legAirlineCodes) {
         let result;
         for (let i = 0; i < airlines.length; i++) {
-          leg.airlineCodes.find((airlineCode) => {
+          legAirlineCodes.find((airlineCode) => {
             if (airlines[i].code == airlineCode) {
               result = airlines[i].name;
             }
@@ -53,13 +69,14 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
         case 2:
           if (legIds[1] == id) {
             userResults = new RoundTripUserFlightData(
-              findAirline(),
+              findAirline(leg.airlineCodes),
               setDateAndTime(departureDateTime, departureTime),
               setDateAndTime(arrivalDateTime, arrivalTime),
               duration
             );
 
             for (let i = 0; i < legs.length; i++) {
+              userResults.trip2airline = findAirline(legs[i].airlineCodes)
               userResults.trip2DepatureTime = setDateAndTime(
                 legs[i].departureDateTime,
                 legs[i].departureTime
@@ -88,5 +105,24 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
   //   console.log(userResultsArray);
   return userResultsArray;
 }
+
+
+
+const displayResults = document.querySelector("#user-result-display");
+// getUserRoundSearchDeatails(finalUserResult).map((obj) => {
+//   obj.addToDom(displayResults);
+// });
+
+
+let array = getUserRoundSearchDeatails(finalUserResult)
+
+for (let i = 0; i < array.length; i++) {
+  displayResults.classList.remove('d-flex')
+ array[0].displayInTable(displayResults)
+  
+}
+
+
+// displayInTable(getUserRoundSearchDeatails(finalUserResult));
 
 // getUserRoundSearchDeatails(finalUserResult);

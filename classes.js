@@ -48,6 +48,25 @@ export class OneWayUserFlightData {
     btnUrl.classList.add("btn-outline-info");
     btnUrl.classList.add("btn");
   }
+
+    displayInTable(parentElement) {
+
+    let table = document.createElement("table");
+    let tHead = table.createTHead();
+
+    let filThead =  Object.keys(this).slice(1)
+    
+    filThead.map((tableHeadText)=>{
+      const headRow = tHead.insertRow();
+      headRow.insertCell().innerText=tableHeadText
+    })
+
+
+    parentElement.appendChild(table)
+    
+  
+  }
+
 }
 
 export class RoundTripUserFlightData extends OneWayUserFlightData {
@@ -58,23 +77,30 @@ export class RoundTripUserFlightData extends OneWayUserFlightData {
     duration,
     trip2DepatureTime,
     trip2ArrivalTime,
-    trip2Duration
+    trip2Duration,
+    trip2airline
   ) {
     super(airline, departureTime, arrivalTime, duration);
+   
     this.trip2DepatureTime = trip2DepatureTime;
     this.trip2ArrivalTime = trip2ArrivalTime;
     this.trip2Duration = trip2Duration;
+    this.trip2airline = trip2airline;
   }
 
   set trip2DepatureTime(time) {
-    this._trip2DepatureTime = time;
+    this._trip2DepatureTime =  `Deaparture : ${time}`;
   }
   set trip2ArrivalTime(time) {
-    this._trip2ArrivalTime = time;
+    this._trip2ArrivalTime =  `Arrival Time: ${time}`;;
   }
   set _trip2Duration(time) {
-    this._trip2Duration = time;
+    this._trip2Duration = `Duration: ${time}`;
   }
+  set _trip2airline(airline) {
+    this.trip2airline = `Airline: ${airline}`;
+  }
+
 }
 
 //legs.id= id of one flight ---> example: "HND-LHR:NH203~31:LH902~1:1"
