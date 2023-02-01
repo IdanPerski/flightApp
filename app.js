@@ -15,7 +15,7 @@ const chooseDestenationBtn = document.querySelector("#choose-destenation-btn");
 /* selects tag */
 const airPortFrom = document.querySelector("#select-airport");
 const airPortDestenation = document.querySelector("#select-dest");
-/* ________________________"Choose from" button________________________________________ */
+/* ________________________Choose departure button________________________________________ */
 chooseTypedCityBtn.addEventListener("click", () => {
   /* input vlaue */
   const inputCityFrom = document.querySelector("#choose-city-input").value;

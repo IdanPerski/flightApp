@@ -49,24 +49,19 @@ export class OneWayUserFlightData {
     btnUrl.classList.add("btn");
   }
 
-    displayInTable(parentElement) {
-
+  displayInTable(parentElement) {
     let table = document.createElement("table");
     let tHead = table.createTHead();
 
-    let filThead =  Object.keys(this).slice(1)
-    
-    filThead.map((tableHeadText)=>{
+    let filThead = Object.keys(this).slice(1);
+
+    filThead.map((tableHeadText) => {
       const headRow = tHead.insertRow();
-      headRow.insertCell().innerText=tableHeadText
-    })
+      headRow.insertCell().innerText = tableHeadText;
+    });
 
-
-    parentElement.appendChild(table)
-    
-  
+    parentElement.appendChild(table);
   }
-
 }
 
 export class RoundTripUserFlightData extends OneWayUserFlightData {
@@ -81,7 +76,7 @@ export class RoundTripUserFlightData extends OneWayUserFlightData {
     trip2airline
   ) {
     super(airline, departureTime, arrivalTime, duration);
-   
+
     this.trip2DepatureTime = trip2DepatureTime;
     this.trip2ArrivalTime = trip2ArrivalTime;
     this.trip2Duration = trip2Duration;
@@ -89,10 +84,10 @@ export class RoundTripUserFlightData extends OneWayUserFlightData {
   }
 
   set trip2DepatureTime(time) {
-    this._trip2DepatureTime =  `Deaparture : ${time}`;
+    this._trip2DepatureTime = `Deaparture : ${time}`;
   }
   set trip2ArrivalTime(time) {
-    this._trip2ArrivalTime =  `Arrival Time: ${time}`;;
+    this._trip2ArrivalTime = `Arrival Time: ${time}`;
   }
   set _trip2Duration(time) {
     this._trip2Duration = `Duration: ${time}`;
@@ -100,33 +95,50 @@ export class RoundTripUserFlightData extends OneWayUserFlightData {
   set _trip2airline(airline) {
     this.trip2airline = `Airline: ${airline}`;
   }
-
 }
 
-//legs.id= id of one flight ---> example: "HND-LHR:NH203~31:LH902~1:1"
+export class UserResultTable {
+  constructor(tHeadCellsArray) {
+    this.html = document.createElement("table");
+    this.tHeadCells = tHeadCellsArray;
+  }
 
-// trips[i].id
-// function iterateOverArrayOfObjects(array,keyValye,itemToCompare){
-//  let result =false
-//    for (const obj of array) {
-//     console.log(obj[keyValye]);
-//     if (itemToCompare == obj[keyValye]) {
-//       result =true
-//     }
-//   }
-//   return result;
-// }
+  tableCells() {
+    const table = this.html;
+    table.classList.add("table");
+    const thead = table.createTHead();
+    const headRow = thead.insertRow();
+    insertCells(headRow, tHeadCellsArray.length, this.tHeadCells);
+    const tbody = table.createTBody();
+    console.log(table);
 
-// iterateOverArrayOfObjects(legs,id)
+    return table;
+  }
 
-/* compareIds()  */
-// trips[i].legsId[i]--> if its roundtrip suuposed the arral length has to be = 2
-// legIds
-// : Array(2)
-// 0: "LHR-HND:LH925~19:LH716~19:0"
-// 1: "HND-LHR:NH5853~31:LH922~31:1"
-// length:2
+  createRows(table, data1, data2) {
+    let maxLength = Math.max(data1.length, data2.length);
+    for (let i = 0; i < maxLength; i++) {
+      let row = table.insertRow();
+      let cell1 = row.insertCell();
+      let cell2 = row.insertCell();
+      cell1.innerHTML = data1[i] || "";
+      cell2.innerHTML = data2[i] || "";
+    }
+  }
 
-// trips[i].legsId[i].map(id)=>{
-//      if (id== )
-// }
+  insertCells(row, numCells, data) {
+    for (let i = 0; i < numCells; i++) {
+      let cell = row.insertCell();
+      cell.innerHTML = data[i];
+    }
+  }
+
+  fillColumn(table, columnIndex, data) {
+    let rows = table.rows;
+    console.log(rows);
+    for (let i = 0; i < rows.length; i++) {
+      let cell = rows[i].insertCell(columnIndex);
+      cell.innerHTML = data[i];
+    }
+  }
+}

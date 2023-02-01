@@ -18,7 +18,7 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
   // function findAirline2(){
   //   let result
   //  for (let i = 0; i < legs.length; i++) {
-    
+
   //   const airlineCodes = legs[i].airlineCodes;
   //   airlines.find((airline)=>{
   //     if (airlineCodes==airline.code) {
@@ -28,7 +28,6 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
   //  }
   //  return result
   // }
-
 
   for (let i = 0; i < trips.length; i++) {
     const trip = trips[i];
@@ -76,7 +75,7 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
             );
 
             for (let i = 0; i < legs.length; i++) {
-              userResults.trip2airline = findAirline(legs[i].airlineCodes)
+              userResults.trip2airline = findAirline(legs[i].airlineCodes);
               userResults.trip2DepatureTime = setDateAndTime(
                 legs[i].departureDateTime,
                 legs[i].departureTime
@@ -106,23 +105,13 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
   return userResultsArray;
 }
 
+function table() {
+  const displayResults = document.querySelector("#user-result-display");
 
+  let array = getUserRoundSearchDeatails(finalUserResult);
 
-const displayResults = document.querySelector("#user-result-display");
-// getUserRoundSearchDeatails(finalUserResult).map((obj) => {
-//   obj.addToDom(displayResults);
-// });
-
-
-let array = getUserRoundSearchDeatails(finalUserResult)
-
-for (let i = 0; i < array.length; i++) {
-  displayResults.classList.remove('d-flex')
- array[0].displayInTable(displayResults)
-  
+  for (let i = 0; i < array.length; i++) {
+    displayResults.classList.remove("d-flex");
+    array[0].displayInTable(displayResults);
+  }
 }
-
-
-// displayInTable(getUserRoundSearchDeatails(finalUserResult));
-
-// getUserRoundSearchDeatails(finalUserResult);
