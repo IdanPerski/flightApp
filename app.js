@@ -7,6 +7,7 @@ import {
 import { getUserRoundSearchDeatails } from "./myFunctions.js";
 
 const apiKey = "63c597d33533e412b5b2e407";
+// const apiKey = "63939419972474f2f853c812";
 
 /* buttons */
 const chooseTypedCityBtn = document.querySelector("#choose-typedCity-btn");
@@ -15,12 +16,21 @@ const chooseDestenationBtn = document.querySelector("#choose-destenation-btn");
 /* selects tag */
 const airPortFrom = document.querySelector("#select-airport");
 const airPortDestenation = document.querySelector("#select-dest");
+
 /* ________________________Choose departure button________________________________________ */
 chooseTypedCityBtn.addEventListener("click", () => {
   /* input vlaue */
   const inputCityFrom = document.querySelector("#choose-city-input").value;
   if (inputCityFrom == "") {
-    console.log("no input value");
+    console.error("no input value");
+    return;
+  }
+  console.log(adultsChildrenInfants);
+  if (
+    adultsChildrenInfants.some((val) => typeof val === "undefined") ||
+    adultsChildrenInfants.length === 0
+  ) {
+    console.error("Please Choose travelers");
     return;
   }
   getCityAirPorts(inputCityFrom, airPortFrom);
@@ -62,9 +72,13 @@ findBtn.addEventListener("click", () => {
   /* send user data to API */
   function sendUserData() {
     // const apiKey = "63c597d33533e412b5b2e407";
-    const oneWayurlReq = `https://api.flightapi.io/${trip()}/${apiKey}/${selectedFrom}/${selectedDest}/${dateInput}/1/0/0/Economy/USD`;
+    const oneWayurlReq = `https://api.flightapi.io/${trip()}/${apiKey}/${selectedFrom}/${selectedDest}/${dateInput}/${
+      adultsChildrenInfants[0]
+    }/${adultsChildrenInfants[1]}/${adultsChildrenInfants[2]}/Economy/USD`;
 
-    const roundTripurlReq = `https://api.flightapi.io/${trip()}/${apiKey}/${selectedFrom}/${selectedDest}/${dateInput}/${dateInput2}/1/0/0/Economy/USD`;
+    const roundTripurlReq = `https://api.flightapi.io/${trip()}/${apiKey}/${selectedFrom}/${selectedDest}/${dateInput}/${dateInput2}/${
+      adultsChildrenInfants[0]
+    }/${adultsChildrenInfants[1]}/${adultsChildrenInfants[2]}/Economy/USD`;
 
     let urlReq = "";
     switch (trip()) {
@@ -79,6 +93,7 @@ findBtn.addEventListener("click", () => {
     console.log(urlReq);
     return urlReq;
   }
+  console.log("96");
   /* user flights Promise */
   const userFlights = new Promise((resolve, reject) => {
     const findFlight = new XMLHttpRequest();
@@ -98,6 +113,7 @@ findBtn.addEventListener("click", () => {
   userFlights
     .then((respond) => {
       const UserFlightDeatails = JSON.parse(respond);
+      console.log(UserFlightDeatails);
       /* ________displaying results_________ */
       const displayResults = document.querySelector("#user-result-display");
       getUserRoundSearchDeatails(UserFlightDeatails).map((obj) => {
@@ -170,3 +186,30 @@ function setDateAndTime(date, time) {
   date = date.slice(0, date.indexOf("T"));
   return `${date} ${time}`;
 }
+
+/* Number of travelers */
+const applyTravelersBtn = document.querySelector("#applyTravelersBtn");
+let adultsChildrenInfants = [];
+console.log(adultsChildrenInfants);
+
+applyTravelersBtn.addEventListener("click", () => {
+  adultsChildrenInfants = [];
+  const travelersBadgeCounter = document.querySelector(
+    "#travelersBadgeCounter"
+  );
+  travelersBadgeCounter.className = "";
+
+  const travelers = Array.from(
+    document.querySelectorAll('input[name="traveler-type"]')
+  );
+  let sum = 0;
+  travelers.map((traveler) => {
+    isNaN(traveler.valueAsNumber)
+      ? (traveler.valueAsNumber = 0)
+      : (sum += traveler.valueAsNumber);
+    adultsChildrenInfants.push(traveler.valueAsNumber);
+  });
+  console.log(adultsChildrenInfants);
+  const newBadgeClass = `bi-${sum}-circle-fill`;
+  travelersBadgeCounter.classList.add(newBadgeClass);
+});

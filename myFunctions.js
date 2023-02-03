@@ -57,7 +57,7 @@ export function getUserRoundSearchDeatails(apiObjectDestruction) {
         case 1:
           if (legIds[0] == id) {
             userResults = new OneWayUserFlightData(
-              findAirline(),
+              findAirline(leg.airlineCodes),
               setDateAndTime(departureDateTime, departureTime),
               setDateAndTime(arrivalDateTime, arrivalTime),
               duration
