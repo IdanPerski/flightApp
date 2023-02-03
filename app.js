@@ -181,12 +181,6 @@ function getCityAirPorts(inputToType, appendTo) {
   });
 }
 
-/* find Dates and time  from the API object */
-function setDateAndTime(date, time) {
-  date = date.slice(0, date.indexOf("T"));
-  return `${date} ${time}`;
-}
-
 /* Number of travelers */
 const applyTravelersBtn = document.querySelector("#applyTravelersBtn");
 let adultsChildrenInfants = [];
