@@ -93,7 +93,7 @@ findBtn.addEventListener("click", () => {
     console.log(urlReq);
     return urlReq;
   }
-  console.log("96");
+
   /* user flights Promise */
   const userFlights = new Promise((resolve, reject) => {
     const findFlight = new XMLHttpRequest();
@@ -113,7 +113,7 @@ findBtn.addEventListener("click", () => {
   userFlights
     .then((respond) => {
       const UserFlightDeatails = JSON.parse(respond);
-      console.log(UserFlightDeatails);
+      // console.log(UserFlightDeatails);
       /* ________displaying results_________ */
       const displayResults = document.querySelector("#user-result-display");
       getUserRoundSearchDeatails(UserFlightDeatails).map((obj) => {
